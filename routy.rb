@@ -43,7 +43,7 @@ end
 # ROUTES
 get '/routes.json' do
   content_type :json
-  Route.order("inbound").to_json
+  Route.order("inbound DESC").to_json
 end
 
 post '/routes/:id/delete' do |id|
