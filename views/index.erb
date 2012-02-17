@@ -1,1 +1,76 @@
-Hello there
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BMI Javascript Route Builder</title>
+    <style>
+    
+      body {
+        font-family: Helvetica;
+        margin: 30px;
+      }
+          
+      input[type=text] {
+        font-size: 24px;
+        width: 600px;
+        border-radius: 6px;
+      }
+    
+      input[type=submit] {
+        font-size: 24px;
+      }
+    
+      span {
+        color: #999;
+      }
+    
+      #nav {
+        color: #bbb;
+        margin: 12px 0;
+      }
+      
+      #nav a {
+        color: #999;
+        text-decoration: none;
+      }
+      
+      #nav a:hover {
+        text-decoration: underline;
+      }
+    
+    </style>
+  </head>
+</html>
+<body>
+  
+  <div id="nav">
+    <a href="/">Route Builder</a> | 
+    <a href="/tester">Route Tester</a>    
+  </div>
+  
+  <h1>Route Builder</h1>
+  
+  <form action="/" method="post">
+    <input type="text" name="inbound" placeholder="Inbound" />
+    <input type="text" name="outbound" placeholder="Outbound" />
+    <br />
+    <input type="submit" value="Add Route" />
+  </form>
+
+  <br />
+
+  <table cellpadding="3">
+  <% @routes.each do |route| %>
+    <tr class="route">
+      <td>
+      <form action="/routes/<%= route.id %>/delete" method="post" name="form-<%= route.id %>" style="display: inline;">
+        <a href="#" onclick="document.forms['form-<%= route.id %>'].submit(); return false;" style="color:red;">[x]</a>
+      </form>
+      <td>
+      <td class="inbound"><span>bmi.com</span><%= route.inbound %></td>
+      <td>&#8594;</td>
+      <td class="outbound"><span>/mobile</span><%= route.outbound %></td>
+    </tr>
+  <% end %>
+  </table>
+  
+</body>
