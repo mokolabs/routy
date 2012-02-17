@@ -58,12 +58,12 @@ post '/' do
     end  
   rescue
   end
-  @routes = Route.order("inbound")
+  @routes = Route.order("inbound DESC")
   erb :index
 end
 
 get '/' do
-  @routes = Route.order("inbound")
+  @routes = Route.order("inbound DESC")
   erb :index
 end
 
