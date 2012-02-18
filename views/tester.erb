@@ -26,6 +26,11 @@
             i++;
           }
           
+          // Remove trailing slash from path
+          if (path.charAt(path.length-1) == '/') {
+            path = path.slice(0, -1);
+          }
+          
           // Load routes feed
           if (path != '') {
             
