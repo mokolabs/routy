@@ -32,6 +32,7 @@
             $.getJSON('/routes.json', function(data) {
               var match = '';
               var redirect = '';
+              var matcher = "/" + segment[1] + "/" + segment[2];
               
               // Look for match
               $.each(data, function(i, val) {
@@ -45,25 +46,26 @@
                   if (query != '') {
                     redirect = redirect + "?" + query;
                   }
+                  
+                  return false;
 
                 // Wildcard route                  
-                } else {
-                  
-                  // Grab the current path without last segment              
-                  var matcher = "/" + segment[1] + "/" + segment[2];
-                  
-                  // Check for match
-                  if (matcher == val.route.inbound) {
+                } else if (matcher == val.route.inbound) {
 
-                    match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
-                    redirect = val.route.outbound + "/" + segment[3]
+                  match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
+                  redirect = val.route.outbound + "/" + segment[3]
 
-                    if (query != '') {
-                      redirect = redirect + "?" + query;
-                    }
+                  if (query != '') {
+                    redirect = redirect + "?" + query;
                   }
+                  
+                  return false;
+
+                // If no match found
+                } else {
+                  console.log("No match found for " + val.route.inbound);
                 }
-                
+                                
               });
 
               // Show success or failure message
