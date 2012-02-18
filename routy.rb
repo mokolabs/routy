@@ -51,6 +51,11 @@ post '/routes/:id/delete' do |id|
   redirect "/"
 end
 
+get '/' do
+  @routes = Route.order("inbound DESC")
+  erb :index
+end
+
 post '/' do
   begin
     unless params[:inbound] == '' and params[:outbound] == ''
@@ -62,15 +67,10 @@ post '/' do
   erb :index
 end
 
-get '/' do
-  @routes = Route.order("inbound DESC")
-  erb :index
-end
-
 get '/tester' do
   erb :tester
 end
 
 post '/tester' do
-  redirect params[:path]
+  erb :tester
 end

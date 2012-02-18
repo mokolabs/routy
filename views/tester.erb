@@ -2,50 +2,85 @@
 <html>
   <head>
     <title>BMI Javascript Route Tester</title>
-    <script src="http://code.jquery.com/jquery-1.7.1.min.js" />
-    <script src="/javascripts/purl.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="/javascripts/jquery.url.js" type="text/javascript" type="text/javascript"></script>
     <script>
     
       $(document).ready(function(){
         $('form').submit(function() {
-          var inbound = $("#inbound").val();
-
+          
+          // Grab inbound route
+          var inbound = "http://" + window.location.host + $("#inbound").val();
+          
+          // Parse route
+          var url = $.url(inbound);
+          var source = url.attr('source');
+          var relative = url.attr('relative');
+          var path = url.attr('path');
+          var query = url.attr('query');
+          var segment_count = path.split(/\//).length - 1;
+          var segment = new Array();
+          var i = 1;
+          while (i <= segment_count) {
+            segment[i] = url.segment(i);
+            i++;
+          }
+          
           // Load routes feed
-          $.getJSON('/routes.json', function(data) {
-            var match = '';
+          if (path != '') {
             
-            // Look for match
-            $.each(data, function(i, val) {
-              if (inbound == val.route.inbound) {
-                match = "Match found (bmi.com" + val.route.inbound + "----> /mobile" + val.route.outbound + ")"
+            $.getJSON('/routes.json', function(data) {
+              var match = '';
+              var redirect = '';
+              
+              // Look for match
+              $.each(data, function(i, val) {
+                
+                // Simple route
+                if (path == val.route.inbound) {
+                  
+                  match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
+                  redirect = val.route.outbound;
+                  
+                  if (query != '') {
+                    redirect = redirect + "?" + query;
+                  }
+
+                // Wildcard route                  
+                } else {
+                  
+                  // Grab the current path without last segment              
+                  var matcher = "/" + segment[1] + "/" + segment[2];
+                  
+                  // Check for match
+                  if (matcher == val.route.inbound) {
+
+                    match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
+                    redirect = val.route.outbound + "/" + segment[3]
+
+                    if (query != '') {
+                      redirect = redirect + "?" + query;
+                    }
+                  }
+                }
+                
+              });
+
+              // Show success or failure message
+              if (match != '') {
+                $("#message").html(match);
+                $("#redirect").html("Redirecting to... /mobile" + redirect);
+              } else {
+                $("#message").html("No match found");
               }
+
             });
             
-            if (match != '') {
-              $("#message").html(match);
-            } else {
-              $("#message").html("No match found");
-            }
-
-          });
-      
-
+          }
+          
           return false;
         });
       });
-
-      // var url = purl();
-      // var source = url.attr('source');
-      // var relative = url.attr('relative');
-      // var path = url.attr('path');
-      // var params = url.param();
-      // var segment_count = path.split(/\//).length - 1;
-      // var segment = new Array();
-      // var i = 1;
-      // while (i <= segment_count) {
-      //   segment[i] = url.segment(i);
-      //   i++;
-      // }
       
     </script>
     <style>
@@ -91,13 +126,14 @@
   
   <h1>Route Tester</h1>
   
-  <form>
+  <form action="/tester" method="post">
     <input id="inbound" type="text" name="inbound" placeholder="Inbound" />
     <br />
     <input type="submit" value="Test Route" />
   </form>
   
   <p id="message"></p>
+  <p id="redirect"></p>
   
   <script>
   
@@ -109,10 +145,7 @@
     //   for(var i = 1; i < segment.length; i++) {
     //    document.write("<p>Segment " + i + ": " + segment[i]);
     //   }
-    // 
-    //   document.write("<p><b>params:</b>&nbsp;" + JSON.stringify(params) + "</p>");
     // }
-  
       
   </script>
   
