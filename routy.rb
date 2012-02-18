@@ -38,12 +38,13 @@ end
 
 # MODEL
 class Route < ActiveRecord::Base
+  default_scope order('inbound DESC')
 end
 
 # ROUTES
 get '/routes.json' do
   content_type :json
-  Route.order("inbound DESC").to_json
+  Route.all.to_json
 end
 
 post '/routes/:id/delete' do |id|
@@ -52,7 +53,7 @@ post '/routes/:id/delete' do |id|
 end
 
 get '/' do
-  @routes = Route.order("inbound DESC")
+  @routes = Route.all
   erb :index
 end
 
@@ -63,7 +64,7 @@ post '/' do
     end  
   rescue
   end
-  @routes = Route.order("inbound DESC")
+  @routes = Route.all
   erb :index
 end
 
@@ -73,4 +74,10 @@ end
 
 post '/tester' do
   erb :tester
+end
+
+get '/download' do
+  content_type :json
+  attachment('routes.json')
+  response.write(Route.all.to_json)
 end
