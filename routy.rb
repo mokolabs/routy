@@ -77,7 +77,7 @@ post '/tester' do
 end
 
 get '/download' do
-  content_type :json
-  attachment('routes.json')
-  response.write(Route.all.to_json)
+  content_type :js
+  attachment('routes.js')
+  response.write('var map = {"routes":' + Route.all.to_json + '};')
 end
