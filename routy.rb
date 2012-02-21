@@ -80,7 +80,7 @@ get '/download' do
   content_type :js
   attachment('routes.js')
   response.write(
-    File.read(File.join('public', 'javascripts', 'purl.js')) + 
+    File.read(File.join('public', 'javascripts', 'plugins.js')) + 
     'var map = {"routes":' + Route.all.to_json + '};' + 
     File.read(File.join('public', 'javascripts', 'logic.js'))
   )

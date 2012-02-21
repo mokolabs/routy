@@ -1,7 +1,7 @@
 
 
 // MOBILE DETECTION
-if (jQuery.cookie('mobile2') == 'true') {
+if (Get_Cookie('mobile2') == 'true' || location.href.match(/mobile=force/i) == 'mobile=force') {
 
   function redirect_to_mobile(redirect) {
     window.location.href = "/mobile2" + redirect;
@@ -10,7 +10,8 @@ if (jQuery.cookie('mobile2') == 'true') {
   // Check for supported mobile browsers
   if (navigator.userAgent.match(/Android/i) ||
       navigator.userAgent.match(/iPhone/i) || 
-      navigator.userAgent.match(/iPod/i)) {
+      navigator.userAgent.match(/iPod/i) ||
+      location.href.match(/mobile=force/i) == 'mobile=force') {
         
       // External links (with target=_blank)
       if (location.href.match(/mobile=skip/i)) {
