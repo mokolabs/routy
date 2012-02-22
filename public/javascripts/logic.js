@@ -52,21 +52,37 @@ if (Get_Cookie('mobile2') == 'true' || location.href.match(/mobile=force/i) == '
             
             // Simple route
             if (path == map.routes[i].route.inbound) {
-
-              match = "Match found (bmi.com" + map.routes[i].route.inbound + " ----> /mobile" + map.routes[i].route.outbound + ")";
+              
+              // console.log(match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")");
               redirect = val.route.outbound;
-
+              
               if (query != '') {
                 redirect = redirect + "?" + query;
               }
               
               redirect_to_mobile(redirect);
 
-            // Wildcard route                  
-            } else if (matcher == val.route.inbound) {
-
-              match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
-              redirect = val.route.outbound + "/" + segment[3]
+            // Wildcard route          
+            } else if (path.match(val.route.inbound) != null) {
+              
+              // Match segments in decreasing order
+              switch(segment_count) {
+                case 3:
+                  var matcher = "/" + segment[1] + "/" + segment[2];
+                  if (matcher == val.route.inbound) {
+                    // console.log("Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")");
+                    redirect = val.route.outbound + "/" + segment[3]
+                  }
+                  break;
+                case 2:
+                  var matcher = "/" + segment[1];
+                  if (matcher == val.route.inbound) {
+                    // console.log(match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")");
+                    redirect = val.route.outbound + "/" + segment[2]
+                  }
+                  break;
+                default:
+              }
 
               if (query != '') {
                 redirect = redirect + "?" + query;
@@ -76,7 +92,7 @@ if (Get_Cookie('mobile2') == 'true' || location.href.match(/mobile=force/i) == '
 
             // If no match found
             } else {
-              // console.log("No match found for " + val.route.inbound);
+              // console.log(match = "No match found for " + val.route.inbound);
             }
           }
         }
