@@ -53,12 +53,14 @@ if (Get_Cookie('mobile2') == 'true' || location.href.match(/mobile=force/i) == '
             // Simple route
             if (path == map.routes[i].route.inbound) {
               
-              // console.log(match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")");
+              match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
               redirect = val.route.outbound;
               
-              if (query != '') {
+              if (query != '' && redirect.match('?') == null && query != 'mobile=force') {
                 redirect = redirect + "?" + query;
               }
+              
+              // console.log(match);
               
               redirect_to_mobile(redirect);
 
@@ -70,29 +72,32 @@ if (Get_Cookie('mobile2') == 'true' || location.href.match(/mobile=force/i) == '
                 case 3:
                   var matcher = "/" + segment[1] + "/" + segment[2];
                   if (matcher == val.route.inbound) {
-                    // console.log("Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")");
+                    match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
                     redirect = val.route.outbound + "/" + segment[3]
                   }
                   break;
                 case 2:
                   var matcher = "/" + segment[1];
                   if (matcher == val.route.inbound) {
-                    // console.log(match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")");
+                    match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
                     redirect = val.route.outbound + "/" + segment[2]
                   }
                   break;
                 default:
               }
 
-              if (query != '') {
+              if (query != '' && redirect.match('?') == null && query != 'mobile=force') {
                 redirect = redirect + "?" + query;
               }
+              
+              // console.log(match);
               
               redirect_to_mobile(redirect);
 
             // If no match found
             } else {
-              // console.log(match = "No match found for " + val.route.inbound);
+              nomatch = "No match found for " + val.route.inbound;
+              // console.log(nomatch);
             }
           }
         }
