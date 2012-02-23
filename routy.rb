@@ -53,7 +53,7 @@ post '/routes/:id/delete' do |id|
 end
 
 get '/' do
-  @routes = Route.all
+  @routes = Route.unscoped.order("inbound ASC")
   erb :index
 end
 
