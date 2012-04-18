@@ -38,7 +38,7 @@ end
 
 # MODEL
 class Route < ActiveRecord::Base
-  default_scope order('inbound DESC')
+  default_scope order('inbound')
 end
 
 # ROUTES
@@ -53,7 +53,7 @@ post '/routes/:id/delete' do |id|
 end
 
 get '/' do
-  @routes = Route.unscoped.order("inbound ASC")
+  @routes = Route.all
   erb :index
 end
 
@@ -81,7 +81,7 @@ get '/download' do
   attachment('routes.js')
   response.write(
     File.read(File.join('public', 'javascripts', 'plugins.js')) + 
-    'var map = {"routes":' + Route.all.to_json + '};' + 
+    'var map = {"routes":' + Route.unscoped.order("inbound DESC").to_json + '};' + 
     File.read(File.join('public', 'javascripts', 'logic.js'))
   )
 end
