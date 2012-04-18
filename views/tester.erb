@@ -6,107 +6,118 @@
     <script src="/javascripts/jquery.url.js" type="text/javascript" type="text/javascript"></script>
     <script>
     
+      // FUNCTIONS
+      function check_route(form) {
+        
+        // Grab inbound route
+        var inbound = "http://" + window.location.host + $("#inbound").val();
+        
+        // Parse route
+        var url = $.url(inbound);
+        var source = url.attr('source');
+        var relative = url.attr('relative');
+        var path = url.attr('path');
+        var query = url.attr('query');
+        var segment_count = path.split(/\//).length - 1;
+        var segment = new Array();
+        var i = 1;
+        while (i <= segment_count) {
+          segment[i] = url.segment(i);
+          i++;
+        }
+        
+        // Remove trailing slash from all paths (except root)
+        if (path.length > 1 && path.charAt(path.length-1) == '/') {
+          path = path.slice(0, -1);
+        }
+        
+        // Load routes feed
+        if (path != '') {
+          
+          $.getJSON('/routes.json', function(data) {
+            var match = '';
+            var redirect = '';
+            
+            // Look for match
+            $.each(data, function(i, val) {
+              
+              // Simple route
+              if (path == val.route.inbound) {
+                
+                match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
+                redirect = val.route.outbound;
+                
+                if (query != '' && redirect.match('?') == null && query != 'mobile=force') {
+                  redirect = redirect + "?" + query;
+                }
+                
+                console.log(match);
+                
+                return false;
+
+              // Wildcard route          
+              } else if (path.match(val.route.inbound) != null) {
+                
+                // Match segments in decreasing order
+                switch(segment_count) {
+                  case 3:
+                    var matcher = "/" + segment[1] + "/" + segment[2];
+                    if (matcher == val.route.inbound) {
+                      match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
+                      redirect = val.route.outbound + "/" + segment[3]
+                    }
+                    break;
+                  case 2:
+                    var matcher = "/" + segment[1];
+                    if (matcher == val.route.inbound) {
+                      match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
+                      redirect = val.route.outbound + "/" + segment[2]
+                    }
+                    break;
+                  default:
+                }
+
+                if (query != '' && redirect.match('?') == null && query != 'mobile=force') {
+                  redirect = redirect + "?" + query;
+                }
+                
+                console.log(match);
+                
+                return false;
+
+              // If no match found
+              } else {
+                console.log("No match found for " + val.route.inbound);
+              }
+                              
+            });
+
+            // Show success or failure message
+            if (match != '') {
+              $("#message").html(match);
+              $("#redirect").html("Redirecting to... /mobile" + redirect);
+            } else {
+              $("#message").html("No matches found for " + path);
+              $("#redirect").html("");
+            }
+
+          });
+          
+        }
+      }
+    
       $(document).ready(function(){
         $('form').submit(function() {
-          
-          // Grab inbound route
-          var inbound = "http://" + window.location.host + $("#inbound").val();
-          
-          // Parse route
-          var url = $.url(inbound);
-          var source = url.attr('source');
-          var relative = url.attr('relative');
-          var path = url.attr('path');
-          var query = url.attr('query');
-          var segment_count = path.split(/\//).length - 1;
-          var segment = new Array();
-          var i = 1;
-          while (i <= segment_count) {
-            segment[i] = url.segment(i);
-            i++;
-          }
-          
-          // Remove trailing slash from all paths (except root)
-          if (path.length > 1 && path.charAt(path.length-1) == '/') {
-            path = path.slice(0, -1);
-          }
-          
-          // Load routes feed
-          if (path != '') {
-            
-            $.getJSON('/routes.json', function(data) {
-              var match = '';
-              var redirect = '';
-              
-              // Look for match
-              $.each(data, function(i, val) {
-                
-                // Simple route
-                if (path == val.route.inbound) {
-                  
-                  match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
-                  redirect = val.route.outbound;
-                  
-                  if (query != '' && redirect.match('?') == null && query != 'mobile=force') {
-                    redirect = redirect + "?" + query;
-                  }
-                  
-                  console.log(match);
-                  
-                  return false;
-
-                // Wildcard route          
-                } else if (path.match(val.route.inbound) != null) {
-                  
-                  // Match segments in decreasing order
-                  switch(segment_count) {
-                    case 3:
-                      var matcher = "/" + segment[1] + "/" + segment[2];
-                      if (matcher == val.route.inbound) {
-                        match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
-                        redirect = val.route.outbound + "/" + segment[3]
-                      }
-                      break;
-                    case 2:
-                      var matcher = "/" + segment[1];
-                      if (matcher == val.route.inbound) {
-                        match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
-                        redirect = val.route.outbound + "/" + segment[2]
-                      }
-                      break;
-                    default:
-                  }
-
-                  if (query != '' && redirect.match('?') == null && query != 'mobile=force') {
-                    redirect = redirect + "?" + query;
-                  }
-                  
-                  console.log(match);
-                  
-                  return false;
-
-                // If no match found
-                } else {
-                  nomatch = "No match found for " + val.route.inbound;
-                  console.log(nomatch);
-                }
-                                
-              });
-
-              // Show success or failure message
-              if (match != '') {
-                $("#message").html(match);
-                $("#redirect").html("Redirecting to... /mobile" + redirect);
-              } else {
-                $("#message").html(nomatch);
-              }
-
-            });
-            
-          }
-          
+          check_route();
           return false;
         });
+      });
+      
+      $(document).keypress(function(e) {
+          if(e.which == 13) {
+            check_route();
+            return false;
+        }
       });
       
     </script>
