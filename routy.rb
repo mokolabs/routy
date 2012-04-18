@@ -85,3 +85,11 @@ get '/download' do
     File.read(File.join('public', 'javascripts', 'logic.js'))
   )
 end
+
+get '/download/mobile' do
+  content_type :js
+  attachment('mobile_routes.js')
+  response.write(
+    'var map = {"routes":' + Route.unscoped.order("inbound DESC").to_json + '};'
+  )
+end
