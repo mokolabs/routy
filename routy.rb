@@ -44,7 +44,7 @@ end
 # ROUTES
 get '/routes.json' do
   content_type :json
-  Route.all.to_json
+  Route.unscoped.order("inbound DESC").to_json
 end
 
 post '/routes/:id/delete' do |id|
