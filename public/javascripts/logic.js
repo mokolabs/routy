@@ -61,7 +61,8 @@ if (navigator.userAgent.match(/Android/i) ||
             // console.log(match);
             
             redirect_to_mobile(redirect);
-
+            break;
+            
           // Wildcard route          
           } else if (path.match(val.route.inbound) != null) {
             
@@ -98,6 +99,7 @@ if (navigator.userAgent.match(/Android/i) ||
             // console.log(match);
             
             redirect_to_mobile(redirect);
+            break;
 
           // If no match found
           } else {
