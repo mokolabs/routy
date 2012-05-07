@@ -7,6 +7,7 @@ function redirect_to_mobile(redirect) {
 
 // Check for supported mobile browsers
 if (navigator.userAgent.match(/Android/i) ||
+    (navigator.userAgent.match(/BlackBerry/i) && navigator.userAgent.search(/WebKit/i) > 0) || 
     navigator.userAgent.match(/iPhone/i) || 
     navigator.userAgent.match(/iPod/i) ||
     location.href.match(/mobile=force/i) == 'mobile=force') {
