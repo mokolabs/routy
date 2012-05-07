@@ -98,8 +98,12 @@ if (navigator.userAgent.match(/Android/i) ||
             
             // console.log(match);
             
-            redirect_to_mobile(redirect);
-            break;
+            // Redirect if match was found
+            // If match not found, just load normal desktop page
+            if (redirect != '') {
+              redirect_to_mobile(redirect);
+              break;
+            }
 
           // If no match found
           } else {
