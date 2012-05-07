@@ -80,14 +80,14 @@ if (Get_Cookie('mobile2') == 'true' || location.href.match(/mobile=force/i) == '
                   var matcher = "/" + segment[1] + "/" + segment[2];
                   if (matcher == val.route.inbound) {
                     match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
-                    redirect = val.route.outbound + "/" + segment[3]
+                    redirect = val.route.outbound + "/" + segment[3];
                   }
                   break;
                 case 2:
                   var matcher = "/" + segment[1];
                   if (matcher == val.route.inbound) {
                     match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
-                    redirect = val.route.outbound + "/" + segment[2]
+                    redirect = val.route.outbound + "/" + segment[2];
                   }
                   break;
                 default:
