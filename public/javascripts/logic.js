@@ -4,7 +4,7 @@
 if (Get_Cookie('mobile2') == 'true' || location.href.match(/mobile=force/i) == 'mobile=force') {
 
   function redirect_to_mobile(redirect) {
-    window.location.href = "/mobile2" + redirect;
+    window.location.href = "/mobile" + redirect;
   }
   
   // Check for supported mobile browsers
