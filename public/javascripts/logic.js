@@ -69,6 +69,13 @@ if (Get_Cookie('mobile2') == 'true' || location.href.match(/mobile=force/i) == '
               
               // Match segments in decreasing order
               switch(segment_count) {
+                case 4:
+                  var matcher = "/" + segment[1] + "/" + segment[2]
+                  if (matcher == val.route.inbound) {
+                    match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
+                    redirect = val.route.outbound + "/" + segment[3] + "/" + segment[4];
+                  }
+                  break;
                 case 3:
                   var matcher = "/" + segment[1] + "/" + segment[2];
                   if (matcher == val.route.inbound) {
