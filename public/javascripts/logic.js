@@ -13,7 +13,7 @@ if (navigator.userAgent.match(/Android/i) ||
     location.href.match(/mobile=force/i) == 'mobile=force') {
       
     // External links (with target=_blank)
-    if (location.href.match(/mobile=skip/i)) {
+    if (location.href.match(/mobile=skip/i) || readCookie('mobile2') == "skip") {
 
     // Normal links
     } else {
