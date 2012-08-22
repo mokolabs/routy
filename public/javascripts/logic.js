@@ -55,7 +55,7 @@ if (navigator.userAgent.match(/Android/i) ||
             match = "Match found (bmi.com" + val.route.inbound + " ----> /mobile" + val.route.outbound + ")";
             redirect = val.route.outbound;
             
-            if (query != '' && redirect.match('?') == null && query != 'mobile=force') {
+            if (query != '' && redirect.match('\\?') == null && query != 'mobile=force') {
               redirect = redirect + "?" + query;
             }
             
@@ -93,7 +93,7 @@ if (navigator.userAgent.match(/Android/i) ||
               default:
             }
 
-            if (query != '' && redirect.match('?') == null && query != 'mobile=force') {
+            if (query != '' && redirect.match('\\?') == null && query != 'mobile=force') {
               redirect = redirect + "?" + query;
             }
             
