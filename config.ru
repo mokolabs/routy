@@ -1,3 +1,3 @@
-require './routy'
+require './app'
 
 run Sinatra::Application

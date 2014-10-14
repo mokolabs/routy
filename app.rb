@@ -14,7 +14,7 @@ end
 configure :production do
   require 'uri'
   require 'pg'
-  
+
   db = URI.parse(ENV['DATABASE_URL'])
 
   ActiveRecord::Base.establish_connection(
@@ -29,7 +29,7 @@ end
 
 configure :development do
   require 'sqlite3'
-  
+
   ActiveRecord::Base.establish_connection(
     :adapter => "sqlite3",
     :database => "routes.db"
@@ -61,7 +61,7 @@ post '/' do
   begin
     unless params[:inbound] == '' and params[:outbound] == ''
       Route.create(:inbound => params[:inbound], :outbound => params[:outbound])
-    end  
+    end
   rescue
   end
   @routes = Route.all
@@ -80,8 +80,8 @@ get '/download' do
   content_type :js
   attachment('routes.js')
   response.write(
-    File.read(File.join('public', 'javascripts', 'plugins.js')) + 
-    'var map = {"routes":' + Route.unscoped.order("inbound DESC").to_json + '};' + 
+    File.read(File.join('public', 'javascripts', 'plugins.js')) +
+    'var map = {"routes":' + Route.unscoped.order("inbound DESC").to_json + '};' +
     File.read(File.join('public', 'javascripts', 'logic.js'))
   )
 end
